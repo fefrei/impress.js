@@ -295,7 +295,7 @@
         
         // `initStep` initializes given step element by reading data from its
         // data attributes and setting correct styles.
-        var initStep = function ( el, idx ) {
+        var initStep = function ( el, idx, disabled ) {
             var data = el.dataset,
                 step = {
                     translate: {
@@ -312,11 +312,13 @@
                     el: el
                 };
             
-            if ( !el.id ) {
-                el.id = "step-" + (idx + 1);
+            if (!disabled) {
+                if ( !el.id ) {
+                    el.id = "step-" + (idx + 1);
+                }
+                
+                stepsData["impress-" + el.id] = step;
             }
-            
-            stepsData["impress-" + el.id] = step;
             
             css(el, {
                 position: "absolute",
@@ -388,7 +390,11 @@
             
             // get and init steps
             steps = $$(".step", root);
-            steps.forEach( initStep );
+            steps.forEach( function (el, idx) { initStep(el, idx, false); } );
+            
+            // get and init disabled steps
+            var disabledSteps = $$(".step-disabled", root);
+            disabledSteps.forEach( function (el, idx) { initStep(el, idx, true); } );
             
             // set a default initial state of the canvas
             currentState = {
@@ -681,7 +687,7 @@
         
         // Prevent default keydown action when one of supported key is pressed.
         document.addEventListener("keydown", function ( event ) {
-            if ( event.keyCode === 9 || event.keyCode == 32 || event.keyCode == 39 ) {
+            if ( event.keyCode === 9 || event.keyCode === 32 || event.keyCode === 39 ) {
                 event.preventDefault();
             }
         }, false);
