@@ -713,7 +713,6 @@
                     case 33: // pg up
                              api.prev();
                              break;
-                    case 9:  // tab
                     case 34: // pg down
                              api.next();
                              break;
